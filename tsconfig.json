@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "ES2015",
+		"module": "ESNext",
+		"outDir": "dist",
+		"declaration": true,
+		"strict": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true
+	},
+	"include": ["src"],
+	"exclude": ["src/playground"]
+}

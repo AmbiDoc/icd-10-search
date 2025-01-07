@@ -1,0 +1,29 @@
+{
+	"name": "icd-10-search",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tsx watch --inspect-brk src/playground/playground.ts",
+		"build": "tsc --project tsconfig.json",
+		"build:watch": "tsc --project tsconfig.json --watch"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"fast-xml-parser": "^4.5.1"
+	},
+	"devDependencies": {
+		"@types/eslint": "^9.6.1",
+		"@types/node": "^22.10.5",
+		"@typescript-eslint/eslint-plugin": "^8.19.0",
+		"@typescript-eslint/parser": "^8.19.0",
+		"eslint": "^9.17.0",
+		"eslint-config-prettier": "^9.1.0",
+		"prettier": "^3.4.2",
+		"tsx": "^4.19.2",
+		"typescript": "^5.7.2"
+	},
+	"type": "module"
+}

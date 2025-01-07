@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>ICD-10 Search</title>
+		<!-- Tailwind CSS from CDN -->
+		<script src="https://cdn.tailwindcss.com"></script>
+
+		<!-- IMPORTANT: "type=module" so we can import from "search.js" in the browser -->
+		<script type="module" src="/dist/search.js"></script>
+
+		<!-- Vue from CDN -->
+		<script src="https://unpkg.com/vue@3"></script>
+	</head>
+	<body class="bg-gray-50 text-gray-900">
+		<div id="app" class="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+			<h1 class="text-2xl font-semibold mb-4">ICD-10 Search</h1>
+
+			<!-- Show how many ICD-10 codes are loaded -->
+			<div class="text-sm text-gray-600 mb-2">Loaded {{ codeSearch?.getCount() }} ICD-10 codes</div>
+
+			<!-- Search bar -->
+			<input
+				type="text"
+				v-model="searchTerm"
+				placeholder="Search ICD-10 codes..."
+				class="w-full p-3 border border-gray-300 rounded outline-none focus:border-blue-600 mb-3"
+			/>
+
+			<!-- Results list -->
+			<ul v-if="slicedCodes.length" class="space-y-2">
+				<li
+					v-for="(codeItem, index) in slicedCodes"
+					:key="index"
+					:title="getMetaString(codeItem)"
+					class="p-3 border border-gray-200 rounded hover:bg-gray-100 transition"
+				>
+					<!-- Highlight code and label -->
+					<strong v-html="highlight(codeItem.code, searchTerm)"></strong>
+					<span> — </span>
+					<span v-html="highlight(codeItem.label, searchTerm)"></span>
+					<span v-if="codeItem.modifierLabel">
+						(
+						<span v-html="highlight(codeItem.modifierLabel, searchTerm)"></span>
+						)
+					</span>
+				</li>
+			</ul>
+			<p class="mt-2 text-sm" v-if="filteredCodes.length > 0">
+				Showing {{ slicedCodes.length }} of {{ filteredCodes.length }} results.
+			</p>
+
+			<!-- "Show more" button -->
+			<button
+				v-if="filteredCodes.length > displayLimit && !showAll"
+				@click="showAll = true"
+				class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+			>
+				Show more
+			</button>
+		</div>
+
+		<script type="module">
+			import { CodeSearch } from '/dist/search.js'
+			const { createApp } = Vue
+
+			createApp({
+				data() {
+					return {
+						searchTerm: '',
+						codeSearch: null, // Instance of CodeSearch
+						displayLimit: 10, // Initial number of results to show
+						showAll: false, // Flag to show all vs. limited
+					}
+				},
+				mounted() {
+					// Fetch codes from your JSON file
+					fetch('/ops-top-level.json')
+						.then((response) => response.json())
+						.then((data) => {
+							this.codeSearch = new CodeSearch(data)
+						})
+				},
+				computed: {
+					filteredCodes() {
+						// Return everything if no CodeSearch yet
+						if (!this.codeSearch) return []
+
+						const trimmedQuery = this.searchTerm.trim()
+
+						return this.codeSearch.search(trimmedQuery)
+					},
+					slicedCodes() {
+						// Show all or limit to displayLimit
+						if (this.showAll) return this.filteredCodes
+						return this.filteredCodes.slice(0, this.displayLimit)
+					},
+				},
+				methods: {
+					// Highlight any part of 'text' that matches 'query'
+					highlight(text, query) {
+						if (!query) return text
+						// Split query at spaces or dashes and join with | for the regex
+						const cleanQuery = query.split(/[\s-]+/).join('|')
+						return text.replace(new RegExp(cleanQuery, 'gi'), (match) => `<b>${match}</b>`)
+					},
+					getMetaString(codeItem) {
+						return [
+							`Ambulatory: ${codeItem.meta.applicableForAmbulatory}`,
+							`Stationary: ${codeItem.meta.applicableForStationary}`,
+							`Min Age: ${codeItem.meta.minAge ?? 'N/A'}`,
+							`Max Age: ${codeItem.meta.maxAge ?? 'N/A'}`,
+							`Sex: ${codeItem.meta.sex ?? 'N/A'}`,
+						].join(' | ')
+					},
+				},
+			}).mount('#app')
+		</script>
+	</body>
+</html>
