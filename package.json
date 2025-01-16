@@ -1,12 +1,24 @@
 {
 	"name": "icd-10-search",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "",
-	"main": "index.js",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
-		"dev": "tsx watch --inspect-brk src/playground/playground.ts",
+		"dev": "tsx watch --inspect src/playground/playground.ts",
 		"build": "tsc --project tsconfig.json",
-		"build:watch": "tsc --project tsconfig.json --watch"
+		"build:watch": "tsc --project tsconfig.json --watch",
+		"prepublishOnly": "npm run build"
 	},
 	"keywords": [],
 	"author": "",

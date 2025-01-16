@@ -1,3 +1,15 @@
+# Sample code data
+ops-top-level.json
+icd10-top-level.json
+ops.xml
+icd10.xml
+ops.json
+icd10.json
+
+
+
+
+
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
@@ -131,12 +143,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-# Sample code data
-ops-top-level.json
-icd10-top-level.json
-ops.xml
-icd10.xml
 
 ### Node Patch ###
 # Serverless Webpack directories
