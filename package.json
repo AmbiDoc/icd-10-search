@@ -1,6 +1,6 @@
 {
 	"name": "icd-10-search",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -8,7 +8,8 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
+			"import": "./dist/index.js",
+			"require": "./dist/index.js"
 		}
 	},
 	"files": [
